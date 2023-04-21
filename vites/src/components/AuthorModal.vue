@@ -2,7 +2,7 @@
   <div class="modal-overlay">
     <div class="q-pa-md modal" style="width: 50%; height: fit-content">
       <div class="heading">{{ button }}</div>
-      <q-form @submit="updateHandler" @reset="onReset" class="q-gutter-md">
+      <q-form @submit="dataHandler" @reset="onReset" class="q-gutter-md">
         <q-input
           filled
           v-model="authorDetails.username"
@@ -11,7 +11,7 @@
           lazy-rules
           :rules="[(val) => (val && val.length > 0) || 'Please type something']"
         />
-
+        <br />
         <q-input
           filled
           v-model="authorDetails.firstname"
@@ -20,7 +20,7 @@
           lazy-rules
           :rules="[(val) => (val && val.length > 0) || 'Please type something']"
         />
-
+        <br />
         <q-input
           filled
           v-model="authorDetails.lastname"
@@ -29,7 +29,7 @@
           lazy-rules
           :rules="[(val) => (val && val.length > 0) || 'Please type something']"
         />
-
+        <br />
         <q-input
           filled
           type="text"
@@ -56,7 +56,7 @@
       <img
         class="close-img"
         src="../assets/close.svg"
-        @click="$emit('close')"
+        @click="closeHandler"
         alt=""
       />
     </div>
@@ -64,21 +64,27 @@
 </template>
 
 <script setup lang="ts">
+import { useRouter } from "vue-router";
 import type { AuthorsData } from "../types/types";
 
+const router = useRouter();
 const emit = defineEmits<{
   (e: "closemodal", authorDetails: AuthorsData): void;
-  (e: "close"): void;
 }>();
 const { author, button } = defineProps<{
   author: AuthorsData;
   button: string;
 }>();
 
+console.log(author, button);
 const authorDetails: AuthorsData = author;
 
-const updateHandler = () => {
+const dataHandler = () => {
   emit("closemodal", authorDetails);
+};
+
+const closeHandler = () => {
+  router.push({ name: "home" });
 };
 
 const onReset = () => {
@@ -98,7 +104,7 @@ const onReset = () => {
   right: 0;
   display: flex;
   justify-content: center;
-  background-color: #000000da;
+  background-color: #201e1eda;
   z-index: 5;
 }
 .close {

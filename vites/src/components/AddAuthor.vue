@@ -1,26 +1,9 @@
 <template>
   <AuthorModal
-    v-show="showModal"
     @closemodal="addHandler"
-    @close="showModal = false"
     :author="author"
     :button="'Add Author'"
   />
-
-  <div class="add">
-    <q-btn
-      no-outline
-      rounded
-      no-caps
-      color="info"
-      text-color="black"
-      class="addAuthor"
-      @click="showModal = true"
-    >
-      <q-icon left size="1.5em" name="add" />
-      <div class="text">Add Author</div>
-    </q-btn>
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -29,8 +12,9 @@ import { useMutation } from "@urql/vue";
 import { ref } from "vue";
 import { createAuthor } from "../queries";
 import { AuthorModalVue as AuthorModal } from "../importComponents";
+import { useRouter } from "vue-router";
 
-const showModal = ref<boolean>(false);
+const router = useRouter();
 const createAuthors = ref<AuthorsData | {}>({});
 const author = ref<AuthorsData>({
   username: "",
@@ -38,8 +22,6 @@ const author = ref<AuthorsData>({
   lastname: "",
   bio: "",
 });
-
-const emit = defineEmits<{ (e: "addAuthor"): void }>();
 
 const addAuthorMutation = useMutation(createAuthor);
 
@@ -51,10 +33,9 @@ const addHandler = async (authorDetails: AuthorsData) => {
     lastname: authorDetails.lastname,
     bio: authorDetails.bio,
   });
-  showModal.value = false;
-  emit("addAuthor");
+
+  router.push({ name: "home" });
 };
-console.log(showModal.value);
 </script>
 
 <style scoped>

@@ -77,3 +77,15 @@ export const createAuthor = gql`
     }
   }
 `;
+
+export const authorById = gql`
+  query authorById($id: Int!) {
+    author(id: $id) {
+      username
+      id
+      firstname
+      lastname
+      bio
+    }
+  }
+`;

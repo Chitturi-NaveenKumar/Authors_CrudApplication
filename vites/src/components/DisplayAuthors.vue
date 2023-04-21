@@ -3,7 +3,20 @@
     <div class="heading">
       <h1>Authors</h1>
     </div>
-    <AddAuthor @addAuthor="getAllAuthors" />
+    <div class="add">
+      <q-btn
+        no-outline
+        rounded
+        no-caps
+        color="info"
+        text-color="black"
+        class="addAuthor"
+        @click="handler($event, 'addauthor', undefined)"
+      >
+        <q-icon left size="1.5em" name="add" />
+        <div class="text">Add Author</div>
+      </q-btn>
+    </div>
     <div class="table">
       <h2>List of authors</h2>
     </div>
@@ -16,7 +29,6 @@
         :columns="columns"
         :loading="loading"
         row-key="name"
-        hide-bottom
         table-header-class=" text-black text-weight-bold    bg-grey"
       >
         <template v-slot:body="props">
@@ -34,12 +46,18 @@
               {{ props.row.bio }}
             </q-td>
             <q-td :props="props" key="update">
-              <UpdateAuthor
-                :id="props.row.id!"
-                :authorData="props.row"
-                @update="getAllAuthors"
-                @noupdate="noupdateHandler"
-              />
+              <q-btn
+                no-outline
+                rounded
+                no-caps
+                color="warning"
+                text-color="black"
+                class="update"
+                @click="handler($event, 'updateauthor', props.row.id)"
+              >
+                <q-icon left size="1.2em" name="edit" />
+                <div class="text">Update</div>
+              </q-btn>
             </q-td>
             <q-td :props="props" key="delete">
               <DeleteAuthors :id="props.row.id!" @update="getAllAuthors" />
@@ -57,15 +75,15 @@
 <script setup lang="ts">
 import { useQuery } from "@urql/vue";
 
-import { onMounted, ref } from "vue";
+import { onMounted, provide, ref } from "vue";
 import { DeleteAuthorsVue as DeleteAuthors } from "../importComponents";
-import { UpdateAuthorsVue as UpdateAuthor } from "../importComponents";
-import { AddAuthorVue as AddAuthor } from "../importComponents";
+
 import { getAuthors } from "../queries";
 import type { AuthorsData, coulmnType } from "../types/types";
+import { useRouter } from "vue-router";
 
 const res = ref<AuthorsData[]>([]);
-
+const router = useRouter();
 const allAuthors = useQuery({ query: getAuthors });
 const loading = ref<boolean>(false);
 const columns: coulmnType[] = [
@@ -139,6 +157,12 @@ const noupdateHandler = () => {
 onMounted(async () => {
   await getAllAuthors();
 });
+const handler = (event: any, routeName: string, id: number | undefined) => {
+  router.push({
+    name: routeName,
+    params: { id: id },
+  });
+};
 </script>
 
 <style scoped>
@@ -179,5 +203,19 @@ h1 {
   border-radius: 5px;
   width: 75%;
   padding: 10px;
+}
+.add {
+  float: right;
+  margin-top: 30px;
+}
+
+.addAuthor {
+  margin-right: 120px;
+  padding: 5px;
+  border: none;
+}
+.text {
+  margin-left: -10px;
+  font-size: 15px;
 }
 </style>

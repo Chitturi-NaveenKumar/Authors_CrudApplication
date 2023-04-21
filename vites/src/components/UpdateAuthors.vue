@@ -1,44 +1,39 @@
 <template>
   <AuthorModal
-    v-show="showModal"
     @closemodal="updateHandler"
-    :author="props.authorData"
-    @close="handler"
-    :button="'Update'"
+    v-if="authorDataById && authorDataById.id"
+    :author="authorDataById"
+    :button="'Update Author Details'"
   />
-
-  <q-btn
-    no-outline
-    rounded
-    no-caps
-    color="warning"
-    text-color="black"
-    class="update"
-    @click="showModal = true"
-  >
-    <q-icon left size="1.2em" name="edit" />
-    <div class="text">Update</div>
-  </q-btn>
 </template>
 
 <script setup lang="ts">
-import { gql, useMutation, useQuery } from "@urql/vue";
-import { updateAuthorById } from "../queries";
+import { useMutation, useQuery } from "@urql/vue";
+import { updateAuthorById, authorById } from "../queries";
 import { AuthorModalVue as AuthorModal } from "../importComponents";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import type { AuthorsData } from "../types/types";
+import { useRoute, useRouter } from "vue-router";
 
 const updateAuthors = ref<AuthorsData | {}>({});
-const showModal = ref<Boolean>(false);
+const authorDataById = ref<AuthorsData>({});
 
-const emit = defineEmits<{ (e: "noupdate"): void; (e: "update"): void }>();
-const props = defineProps<{ id: number; authorData: AuthorsData }>();
+const route = useRoute();
+const router = useRouter();
+const id: number = parseInt(route.params.id);
 
+//query vairables
+const authorsQuery = useQuery({ query: authorById, variables: { id } });
 const updateAuthorMutation = useMutation(updateAuthorById);
 
-const handler = () => {
-  showModal.value = false;
-  emit("noupdate");
+//query Handlers
+const getAuthorById = async () => {
+  const author = await authorsQuery.executeQuery();
+
+  authorDataById.value = await JSON.parse(
+    JSON.stringify(author.data.value.author)
+  );
+  console.log(authorDataById.value);
 };
 
 const updateHandler = async (authorDetails: AuthorsData) => {
@@ -50,8 +45,13 @@ const updateHandler = async (authorDetails: AuthorsData) => {
     bio: authorDetails.bio,
   });
 
-  showModal.value = false;
+  router.push({
+    name: "home",
+  });
 };
+onMounted(async () => {
+  await getAuthorById();
+});
 </script>
 
 <style scoped>

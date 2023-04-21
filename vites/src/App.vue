@@ -11,9 +11,10 @@ provideClient(client);
 </script>
 
 <template>
+  <router-view></router-view>
   <suspense>
     <!-- <HelloWorld /> -->
-    <DisplayAuthors />
+    <!-- <DisplayAuthors /> -->
     <!-- <Modal /> -->
   </suspense>
 </template>
