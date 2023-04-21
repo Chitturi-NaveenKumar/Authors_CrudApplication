@@ -12,7 +12,6 @@
           :rules="[(val) => (val && val.length > 0) || 'Please type something']"
         />
 
-        <q-seperator />
         <q-input
           filled
           v-model="authorDetails.firstname"
@@ -22,7 +21,6 @@
           :rules="[(val) => (val && val.length > 0) || 'Please type something']"
         />
 
-        <q-seperator />
         <q-input
           filled
           v-model="authorDetails.lastname"
@@ -32,7 +30,6 @@
           :rules="[(val) => (val && val.length > 0) || 'Please type something']"
         />
 
-        <q-seperator />
         <q-input
           filled
           type="text"
