@@ -16,7 +16,6 @@
 <script setup lang="ts">
 import type { AuthorsData } from "../types/types";
 import { useMutation } from "@urql/vue";
-import { ref } from "vue";
 import { deleteAuthor } from "../queries";
 
 const updateTodoResult = ref<AuthorsData | {}>({});

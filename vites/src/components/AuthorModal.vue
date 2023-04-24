@@ -47,24 +47,27 @@
             type="reset"
             color="primary"
             flat
-            class="q-ml-sm"
+            class="q-ml-sm text-weight-bold"
           />
         </div>
       </q-form>
     </div>
-    <div class="close">
-      <img
-        class="close-img"
-        src="../assets/close.svg"
+    <div class="exit">
+      <q-btn
+        label="Back"
+        type="submit"
+        color="warning"
+        rounded
+        size="md"
+        no-caps
+        class="text-weight-medium"
         @click="closeHandler"
-        alt=""
       />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useRouter } from "vue-router";
 import type { AuthorsData } from "../types/types";
 
 const router = useRouter();
@@ -84,7 +87,7 @@ const dataHandler = () => {
 };
 
 const closeHandler = () => {
-  router.push({ name: "home" });
+  router.push({ name: "index" });
 };
 
 const onReset = () => {
@@ -125,7 +128,7 @@ const onReset = () => {
   background-color: #e3dddd;
   height: 60%;
   width: 50%;
-  margin-top: 10%;
+  margin-top: 5%;
   /* padding: 60px 0; */
   border-radius: 20px;
   overflow: hidden;
@@ -135,5 +138,9 @@ const onReset = () => {
   font-size: 1.6rem;
   margin-bottom: 2.1rem;
   font-weight: bold;
+}
+.exit {
+  margin-top: 40rem;
+  margin-left: -5rem;
 }
 </style>

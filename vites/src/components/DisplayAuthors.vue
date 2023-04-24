@@ -74,19 +74,15 @@
 
 <script setup lang="ts">
 import { useQuery } from "@urql/vue";
-
-import { onMounted, provide, ref } from "vue";
-import { DeleteAuthorsVue as DeleteAuthors } from "../importComponents";
-
+import { QTableProps } from "quasar";
 import { getAuthors } from "../queries";
 import type { AuthorsData, coulmnType } from "../types/types";
-import { useRouter } from "vue-router";
 
 const res = ref<AuthorsData[]>([]);
 const router = useRouter();
 const allAuthors = useQuery({ query: getAuthors });
 const loading = ref<boolean>(false);
-const columns: coulmnType[] = [
+const columns: QTableProps["columns"] = [
   {
     name: "username",
     required: true,
@@ -157,10 +153,15 @@ const noupdateHandler = () => {
 onMounted(async () => {
   await getAllAuthors();
 });
-const handler = (event: any, routeName: string, id: number | undefined) => {
+const handler = (
+  event: any,
+  routeName: string,
+  id: number | string | undefined
+) => {
+  const val = id?.toString();
+
   router.push({
-    name: routeName,
-    params: { id: id },
+    path: `${routeName}/${val}`,
   });
 };
 </script>

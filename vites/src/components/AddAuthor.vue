@@ -9,10 +9,8 @@
 <script setup lang="ts">
 import type { AuthorsData } from "../types/types.ts";
 import { useMutation } from "@urql/vue";
-import { ref } from "vue";
+
 import { createAuthor } from "../queries";
-import { AuthorModalVue as AuthorModal } from "../importComponents";
-import { useRouter } from "vue-router";
 
 const router = useRouter();
 const createAuthors = ref<AuthorsData | {}>({});
@@ -34,7 +32,7 @@ const addHandler = async (authorDetails: AuthorsData) => {
     bio: authorDetails.bio,
   });
 
-  router.push({ name: "home" });
+  router.push({ name: "index" });
 };
 </script>
 

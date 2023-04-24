@@ -10,17 +10,14 @@
 <script setup lang="ts">
 import { useMutation, useQuery } from "@urql/vue";
 import { updateAuthorById, authorById } from "../queries";
-import { AuthorModalVue as AuthorModal } from "../importComponents";
-import { onMounted, ref } from "vue";
 import type { AuthorsData } from "../types/types";
-import { useRoute, useRouter } from "vue-router";
 
 const updateAuthors = ref<AuthorsData | {}>({});
 const authorDataById = ref<AuthorsData>({});
+const props = defineProps(["id"]);
 
-const route = useRoute();
 const router = useRouter();
-const id: number = parseInt(route.params.id);
+const id: number = parseInt(props.id);
 
 //query vairables
 const authorsQuery = useQuery({ query: authorById, variables: { id } });
@@ -46,7 +43,7 @@ const updateHandler = async (authorDetails: AuthorsData) => {
   });
 
   router.push({
-    name: "home",
+    name: "index",
   });
 };
 onMounted(async () => {
