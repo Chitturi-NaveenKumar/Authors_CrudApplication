@@ -1,38 +1,36 @@
 <template>
   <AuthorModal
     @closemodal="addHandler"
-    :author="author"
+    :author="authorData"
     :button="'Add Author'"
   />
 </template>
 
 <script setup lang="ts">
-import type { AuthorsData } from "../types/types.ts";
 import { useMutation } from "@urql/vue";
-
+import { useAuthorsStore } from "../store/authors";
+import type { AuthorsData } from "../types/types.ts";
 import { createAuthor } from "../queries";
 
-const router = useRouter();
-const createAuthors = ref<AuthorsData | {}>({});
-const author = ref<AuthorsData>({
-  username: "",
-  firstname: "",
-  lastname: "",
-  bio: "",
-});
+const authorsStore = useAuthorsStore();
+const { authorData } = storeToRefs(authorsStore);
 
 const addAuthorMutation = useMutation(createAuthor);
 
-const addHandler = async (authorDetails: AuthorsData) => {
-  createAuthors.value = await addAuthorMutation.executeMutation({
+const addAuthor = async (authorDetails: AuthorsData) => {
+  await addAuthorMutation.executeMutation({
     id: authorDetails.id,
     username: authorDetails.username,
     firstname: authorDetails.firstname,
     lastname: authorDetails.lastname,
     bio: authorDetails.bio,
   });
+  authorsStore.cleanAuthor();
+};
 
-  router.push({ name: "index" });
+const addHandler = async (authorDetails: AuthorsData) => {
+  await addAuthor(authorDetails);
+  authorsStore.router.push({ name: "index" });
 };
 </script>
 

@@ -1,8 +1,8 @@
 <template>
   <AuthorModal
     @closemodal="updateHandler"
-    v-if="authorDataById && authorDataById.id"
-    :author="authorDataById"
+    v-if="authorData && authorData.id"
+    :author="authorData"
     :button="'Update Author Details'"
   />
 </template>
@@ -11,12 +11,12 @@
 import { useMutation, useQuery } from "@urql/vue";
 import { updateAuthorById, authorById } from "../queries";
 import type { AuthorsData } from "../types/types";
+import { useAuthorsStore } from "../store/authors";
 
-const updateAuthors = ref<AuthorsData | {}>({});
-const authorDataById = ref<AuthorsData>({});
+const authorsStore = useAuthorsStore();
+const { authorData } = storeToRefs(authorsStore);
 const props = defineProps(["id"]);
 
-const router = useRouter();
 const id: number = parseInt(props.id);
 
 //query vairables
@@ -27,14 +27,13 @@ const updateAuthorMutation = useMutation(updateAuthorById);
 const getAuthorById = async () => {
   const author = await authorsQuery.executeQuery();
 
-  authorDataById.value = await JSON.parse(
-    JSON.stringify(author.data.value.author)
-  );
-  console.log(authorDataById.value);
+  authorData.value = await JSON.parse(JSON.stringify(author.data.value.author));
+  console.log(authorData.value);
 };
 
+//HANDLER FOR UPDATE
 const updateHandler = async (authorDetails: AuthorsData) => {
-  updateAuthors.value = await updateAuthorMutation.executeMutation({
+  await updateAuthorMutation.executeMutation({
     id: authorDetails.id,
     username: authorDetails.username,
     firstname: authorDetails.firstname,
@@ -42,10 +41,12 @@ const updateHandler = async (authorDetails: AuthorsData) => {
     bio: authorDetails.bio,
   });
 
-  router.push({
+  authorsStore.cleanAuthor();
+  authorsStore.router.push({
     name: "index",
   });
 };
+
 onMounted(async () => {
   await getAuthorById();
 });

@@ -11,7 +11,7 @@
         color="info"
         text-color="black"
         class="addAuthor"
-        @click="handler($event, 'addauthor', undefined)"
+        @click="addhandler($event, 'addauthor')"
       >
         <q-icon left size="1.5em" name="add" />
         <div class="text">Add Author</div>
@@ -25,7 +25,7 @@
       <q-table
         flat
         bordered
-        :rows="res"
+        :rows="authorsData"
         :columns="columns"
         :loading="loading"
         row-key="name"
@@ -53,14 +53,17 @@
                 color="warning"
                 text-color="black"
                 class="update"
-                @click="handler($event, 'updateauthor', props.row.id)"
+                @click="updatehandler($event, 'updateauthor', props.row.id)"
               >
                 <q-icon left size="1.2em" name="edit" />
                 <div class="text">Update</div>
               </q-btn>
             </q-td>
             <q-td :props="props" key="delete">
-              <DeleteAuthors :id="props.row.id!" @update="getAllAuthors" />
+              <DeleteAuthors
+                :id="props.row.id!"
+                @update="authorsStore.getAllAuthors"
+              />
             </q-td>
           </q-tr>
         </template>
@@ -73,15 +76,13 @@
 </template>
 
 <script setup lang="ts">
-import { useQuery } from "@urql/vue";
+import { storeToRefs } from "pinia";
 import { QTableProps } from "quasar";
-import { getAuthors } from "../queries";
-import type { AuthorsData, coulmnType } from "../types/types";
+import { useAuthorsStore } from "../store/authors";
 
-const res = ref<AuthorsData[]>([]);
-const router = useRouter();
-const allAuthors = useQuery({ query: getAuthors });
-const loading = ref<boolean>(false);
+const authorsStore = useAuthorsStore();
+const { authorsData, loading } = storeToRefs(authorsStore);
+
 const columns: QTableProps["columns"] = [
   {
     name: "username",
@@ -136,31 +137,27 @@ const columns: QTableProps["columns"] = [
   },
 ];
 
-const getAllAuthors = async () => {
-  loading.value = true;
-  const authors = await allAuthors.executeQuery();
-
-  console.log(authors.data.value.authors);
-  res.value = await JSON.parse(JSON.stringify(authors.data.value.authors));
-
-  loading.value = false;
-};
-
-const noupdateHandler = () => {
-  getAllAuthors();
+const noupdateHandler = async () => {
+  await authorsStore.getAllAuthors();
 };
 
 onMounted(async () => {
-  await getAllAuthors();
+  await authorsStore.getAllAuthors();
 });
-const handler = (
+
+const addhandler = (event: any, routeName: string) => {
+  authorsStore.router.push({
+    path: `${routeName}`,
+  });
+};
+const updatehandler = (
   event: any,
   routeName: string,
   id: number | string | undefined
 ) => {
   const val = id?.toString();
 
-  router.push({
+  authorsStore.router.push({
     path: `${routeName}/${val}`,
   });
 };

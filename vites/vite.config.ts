@@ -13,7 +13,7 @@ export default defineConfig({
       exclude: ["**/components/*.vue"],
     }),
     Components({
-      dirs: ["src/components", "src/pages"],
+      dirs: ["src/components", "src/pages", "src/store"],
       extensions: ["vue", "ts"],
       dts: true,
       deep: true,
@@ -45,6 +45,7 @@ export default defineConfig({
         // presets
         "vue",
         "vue-router",
+        "pinia",
 
         {
           from: "vue-router",

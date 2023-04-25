@@ -15,6 +15,7 @@ declare module '@vue/runtime-core' {
     AddAuthorView: typeof import("./src/views/AddAuthorView.vue")["default"]
     App: typeof import("./src/App.vue")["default"]
     AuthorModal: typeof import('./src/components/AuthorModal.vue')['default']
+    Authors: typeof import('./src/store/authors.ts')['default']
     createRouter: typeof import("vue-router")["createRouter"]
     CreateRouter: typeof import("vue-router")["CreateRouter"]
     DeleteAuthors: typeof import('./src/components/DeleteAuthors.vue')['default']
