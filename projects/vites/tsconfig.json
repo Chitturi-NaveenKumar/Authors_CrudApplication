@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "allowImportingTsExtensions": true,
+    "moduleResolution": "Node",
+    "strict": true,
+
+    "jsx": "preserve",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "lib": ["ESNext", "DOM"],
+    "skipLibCheck": true,
+    "noEmit": true,
+    "types": ["vite-plugin-pages/client"]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "./auto-imports.d.ts",
+    "components.d.ts",
+    "src/queries/index.js"
+  ],
+
+  "references": [{ "path": "./tsconfig.node.json" }]
+}
